@@ -201,14 +201,3 @@ for L in 40 60 80 100; do
   /usr/bin/time -v python suffixarray_search.py --reference "$R" --query "$Q" --query_ct "$N"
 done
 ```
-
----
-
-## Notes / Troubleshooting
-
-* `.fasta.gz` input is supported.
-* On macOS, GNU `/usr/bin/time -v` may not exist → run memory benchmarks on Linux.
-* The naive implementation is expected to be slow; it is used as the baseline.
-
-
-If you paste your `RUN_INSTRUCTIONS.txt` contents here (or upload it again if you changed it), I can mirror its wording exactly and include any special command examples your course expects.
