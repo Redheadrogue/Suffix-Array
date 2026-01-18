@@ -46,7 +46,27 @@ sudo apt-get install -y python3 python3-venv python3-dev build-essential
 ```
 
 ---
+## What we did (implementation summary)
 
+We started from the official template repository **SGSSGene/ImplementingSearch**:
+
+https://github.com/SGSSGene/ImplementingSearch
+
+Following the instructions provided in the template README, we:
+
+1. **Cloned the repository (including submodules)** to get the full project structure and dependencies.
+2. Implemented the missing parts marked as `//!TODO ImplementMe` in:
+   - `src/naive_search.cpp`
+   - `src/suffixarray_search.cpp`
+3. Built the C++ project using CMake and the provided build setup.
+4. Ran the compiled binaries and tested different input sizes by changing the `--query_ct` argument.
+5. Measured and compared the runtime of:
+   - the **naive search** approach
+   - the **suffix array based** search approach
+
+The goal was to compare the performance difference between a direct search baseline and an indexed search method.
+
+---
 ## Setup
 
 Create a virtual environment and install dependencies:
