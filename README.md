@@ -1,4 +1,6 @@
-# Assignment 1 — Naive Search vs Suffix Array Search (Python + C++)
+# Assignment 1 — Naive Search vs Suffix Array Search (Python + C++) by the Jonas Brothers 
+
+<img width="1536" height="1024" alt="ChatGPT Image Jan 13, 2026, 12_40_28 AM" src="https://github.com/user-attachments/assets/98c0b52f-8786-4f6b-b9ab-1a825fbbea90" />
 
 This repository contains implementations and benchmarks for exact string search on DNA data:
 
