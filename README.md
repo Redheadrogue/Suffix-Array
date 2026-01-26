@@ -221,3 +221,116 @@ for L in 40 60 80 100; do
   /usr/bin/time -v python suffixarray_search.py --reference "$R" --query "$Q" --query_ct "$N"
 done
 ```
+
+### Assignment 2:
+
+
+```bash
+DATA=/home/mi/tiloa00/Suffix-Array-main/data
+R=$DATA/reference/text.dna4.short.fasta
+```
+
+Implement an fmindex based search
+It requires the same dependencies and environment, in the addition of tracemalloc for memory checking.
+Benchmarking Results:
+```bash
+for N in 1000 10000 100000 1000000; do
+
+  for L in 100; do
+    Q=$DATA/illumina_reads_${L}.fasta.gz
+
+    echo "== suffix array len=$L N=$N =="
+    /usr/bin/time -v python fmindex_search.py --reference "$R" --query "$Q" --query_ct "$N"
+done
+```
+
+python suffix Benchmarks on home computer with text.dna4.short.fasta.index(Issues with running on the server):
+--query_ct "100"
+total_hits	40
+build_ms	12544
+search_ms	1
+
+--query_ct "1000"
+total_hits	448
+build_ms	12545
+search_ms	14
+
+python fmindex Benchmarks on home computer:
+--query_ct "100"
+total_hits	40
+build_ms	91156
+search_ms	3
+
+--query_ct "1000"
+total_hits	448
+build_ms	91220
+search_ms	29
+
+--query_ct "10000"
+total_hits	4456
+build_ms	94796
+search_ms	286
+
+--query_ct "100000"
+total_hits	45335
+build_ms	91413
+search_ms	2641
+
+--query_ct "1000000"
+total_hits	453350
+build_ms	91679
+search_ms	26269
+
+This Python's fmindex is always worse than the suffix array implementation in runtime, since it also requires a suffix array, and due to
+```bash
+self.Occ = {c: [0] * (self.n + 1) for c in self.alphabet}
+```
+since that uses Python integers and has a huge memory footprint.
+It technically works, by having a stable FMindex buildtime of ~91500 ms, with a linearly scaling search ms time.
+
+python fmindex Benchmarks on home computer while checking for memory usage using tracemalloc:
+--query_ct "1000"
+total_hits	448
+index_mem_kb	10742296
+
+--query_ct "10000"
+total_hits	4456
+index_mem_kb	10742295
+
+Comparing to Server python execution:
+
+== suffix array len=100 N=1000 ==
+total_hits      448
+build_ms        99906
+search_ms       34
+User time (seconds): 101.27
+System time (seconds): 4.30
+Elapsed (wall clock) time (h:mm:ss or m:ss): 1:45.63
+
+== suffix array len=100 N=1000000 ==
+total_hits      453350
+build_ms        97869
+search_ms       30759
+User time (seconds): 130.09
+System time (seconds): 4.32
+Elapsed (wall clock) time (h:mm:ss or m:ss): 2:14.50
+
+On the server, the runtime was a bit slower, but we can see with the linux time benchmark, that the runtime increase scales well with larger query_ct.
+
+Benchmark the Human reference genome:
+
+```bash
+R=$DATA/reference/GCF_000001405.26_GRCh38_genomic.fna
+N=10000
+for L in 40 60 80 100; do
+  Q=$DATA/illumina_reads_${L}.fasta.gz
+  echo "== suffix array len=$L N=$N =="
+  /usr/bin/time -v python fmindex_search.py --reference "$R" --query "$Q" --query_ct "$N"
+done
+```
+At the time of submitting, it was still running. Attempts at running it locally caused PC crashes, and I only managed server access very late.
+
+
+### Conclusion
+Normally, the FMindex should be vastly superior in both runtime and memory compared to the suffix array. Our implementation is lacking in both. We also attempted implementing it in C++, but had issues with the Seqan3 integration, as described in the github, and didn't finish it in time. Our cpp FMindex is attached in the submission.
+Our implementation did however achieve a runtime scaling well with query_ct.
